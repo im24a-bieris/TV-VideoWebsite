@@ -1,8 +1,10 @@
 :root {
   --gold: #E5C100;
+  --yellow: #f7dc2f;
   --black: #0F0F0F;
+  --white: #FFFFFF;
   --card-bg: #0F0F0F;
-  --page-bg: #F5E6B3;
+  --page-bg: #fffdf0;
   --text-light: #FFFFFF;
   --text-dark: #111111;
   --blue: #2F5DA8;
