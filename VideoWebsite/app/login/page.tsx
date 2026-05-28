@@ -5,7 +5,8 @@ export default function LoginPage() {
   return (
     <main>
       <header className="site-header">
-        <Link href="/" className="brand">
+        <Link href="/" className="brand logo-link">
+          <span className="brand-icon">M</span>
           TV Männedorf
         </Link>
 
@@ -15,12 +16,15 @@ export default function LoginPage() {
         </nav>
       </header>
 
-      <section className="login-hero">
+      <section className="login-page">
         <div className="login-card">
-          <p className="eyebrow">Mitglieds-Login</p>
-          <h1 className="title">Melde dich an</h1>
+          <div className="card-header">
+            <span className="eyebrow">Mitglieds-Login</span>
+            <h1 className="title">Anmelden</h1>
+          </div>
+
           <p className="subtitle">
-            Gib deine Zugangsdaten ein, um deine Übungen und Ergebnisse zu sehen.
+            Melde dich mit deiner E-Mail und deinem Passwort an, um alle Trainingsdaten zu sehen.
           </p>
 
           <form className="login-form">
@@ -34,20 +38,22 @@ export default function LoginPage() {
               <input type="password" placeholder="••••••••" />
             </label>
 
-            <button type="submit" className="button login-button">
-              Anmelden
-            </button>
+            <div className="form-actions">
+              <button type="submit" className="button button-primary">
+                Anmelden
+              </button>
+              <Link href="/register" className="button button-secondary">
+                Registrieren
+              </Link>
+            </div>
           </form>
-        </div>
 
-        <div className="login-side">
-          <p className="text-xl font-semibold">Noch kein Konto?</p>
-          <p className="text-gray-600 mb-6">
-            Als Gast kannst du sofort weitertrainieren und die Übungen ansehen.
-          </p>
-          <Link href="/exercises" className="button">
-            Als Gast starten
-          </Link>
+          <div className="login-footer">
+            <span>Kein Konto?</span>
+            <Link href="/exercises" className="button button-ghost">
+              Als Gast starten
+            </Link>
+          </div>
         </div>
       </section>
     </main>
