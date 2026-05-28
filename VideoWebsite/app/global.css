@@ -192,7 +192,7 @@ select:focus {
   place-items: center;
   min-height: calc(100vh - 88px);
   padding: 3rem 1.5rem;
-  background: linear-gradient(135deg, #F5E6B3 0%, #FFF4D6 50%, #F5E6B3 100%);
+  background: #F5C90A;
   overflow: hidden;
 }
 
@@ -216,7 +216,7 @@ select:focus {
 
 .login-card {
   position: relative;
-  width: min(520px, 100%);
+  width: min(580px, 100%);
   background: #0F0F0F;
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: var(--radius);
