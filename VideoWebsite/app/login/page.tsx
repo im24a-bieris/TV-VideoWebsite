@@ -42,16 +42,17 @@ export default function LoginPage() {
               <button type="submit" className="button button-primary">
                 Anmelden
               </button>
-              <Link href="/register" className="button button-secondary">
-                Registrieren
-              </Link>
             </div>
           </form>
 
           <div className="login-footer">
             <span>Kein Konto?</span>
-            <Link href="/exercises" className="button button-ghost">
-              Als Gast starten
+            <Link href="/register" className="auth-link">
+              Registrieren
+            </Link>
+            <span>oder</span>
+            <Link href="/exercises" className="auth-link">
+              als Gast starten
             </Link>
           </div>
         </div>
