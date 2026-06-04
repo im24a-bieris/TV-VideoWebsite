@@ -194,7 +194,7 @@ select:focus {
   place-items: center;
   min-height: 100vh;
   padding: 3rem 1.5rem;
-  background: var(--page-bg);
+  background: var(--gold);
   overflow: hidden;
 }
 
@@ -229,7 +229,8 @@ select:focus {
 .login-brand {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.5rem;
+  width: max-content;
 }
 
 .login-card::before {
@@ -263,16 +264,16 @@ select:focus {
 .login-card .title {
   margin: 0;
   color: rgba(255, 255, 255, 0.96);
-  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
   font-weight: 500;
   line-height: 1.2;
 }
 
 .login-card .subtitle {
-  margin: 0.75rem 0 0;
+  margin: 1rem 0 0;
   color: rgba(255, 255, 255, 0.75);
-  font-size: 0.95rem;
-  line-height: 1.65;
+  font-size: 1rem;
+  line-height: 1.7;
   max-width: 480px;
 }
 
@@ -284,10 +285,10 @@ select:focus {
 
 .login-card label {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.5rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 1rem;
 }
 
 .login-card input {
