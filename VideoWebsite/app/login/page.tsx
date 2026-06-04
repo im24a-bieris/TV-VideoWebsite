@@ -5,12 +5,11 @@ export default function LoginPage() {
   return (
     <main>
       <section className="login-page">
-        <Link href="/" className="login-brand-link">
-          <span className="brand-icon">T</span>
-          <span className="brand-text">VM</span>
-        </Link>
-
         <div className="login-card">
+          <Link href="/" className="login-brand-link">
+            <span className="brand-icon-login">TV Männedorf</span>
+          </Link>
+
           <div className="card-header">
             <h1 className="title">Anmelden</h1>
           </div>
