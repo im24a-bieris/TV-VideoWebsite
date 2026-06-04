@@ -5,11 +5,12 @@ export default function LoginPage() {
   return (
     <main>
       <section className="login-page">
-        <div className="login-card">
-          <div className="login-brand">
-            <span className="brand-icon">M</span>
-          </div>
+        <Link href="/" className="login-brand-link">
+          <span className="brand-icon">T</span>
+          <span className="brand-text">VM</span>
+        </Link>
 
+        <div className="login-card">
           <div className="card-header">
             <h1 className="title">Anmelden</h1>
           </div>
@@ -47,6 +48,10 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+
+        <Link href="/" className="login-back-link">
+          ← Zurück
+        </Link>
       </section>
     </main>
   );
