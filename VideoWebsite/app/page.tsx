@@ -5,6 +5,7 @@ export default function Home() {
     <main>
       <header className="site-header">
         <Link href="/" className="brand">
+          <span className="brand-icon">M</span>
           TV Männedorf
         </Link>
 
