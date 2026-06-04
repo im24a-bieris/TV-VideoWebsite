@@ -90,9 +90,6 @@ a {
   
 }
 
-.brand-icon-login a:hover {
-  color: var(--black);
-}
 
 .nav {
   display: flex;
@@ -242,11 +239,11 @@ select:focus {
   margin-bottom: 1.5rem;
   font-weight: 700;
   font-size: 0.95rem;
-  transition: opacity 200ms ease;
+  transition: filter 200ms ease, opacity 200ms ease;
 }
 
 .login-brand-link:hover {
-  opacity: 0.8;
+  filter: brightness(1.3);
 }
 
 .login-brand-link .brand-text {
@@ -395,6 +392,10 @@ select:focus {
 .button-ghost:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+.button-primary:hover {
+  filter: brightness(1.15);
 }
 
 .login-footer {
