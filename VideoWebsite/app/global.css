@@ -77,16 +77,21 @@ a {
   font-weight: 800;
 }
 
-brand-icon-login {
+.brand-icon-login {
   display: grid;
   place-items: center;
   width: 130px;
   height: 36px;
-  color: var(--text-dark);
+  color: var(--black);
   background: var(--gold);
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
+  
+}
+
+.brand-icon-login a:hover {
+  color: var(--black);
 }
 
 .nav {
@@ -246,6 +251,9 @@ select:focus {
 
 .login-brand-link .brand-text {
   display: inline;
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 1rem;
 }
 
 .login-back-link {
