@@ -4,22 +4,13 @@ import "../global.css";
 export default function LoginPage() {
   return (
     <main>
-      <header className="site-header">
-        <Link href="/" className="brand logo-link">
-          <span className="brand-icon">M</span>
-          TV Männedorf
-        </Link>
-
-        <nav className="nav">
-          <Link href="/exercises">Als Gast weiterfahren</Link>
-          <Link href="/login">Login</Link>
-        </nav>
-      </header>
-
       <section className="login-page">
+        <div className="login-brand">
+          <span className="brand-icon">M</span>
+        </div>
+
         <div className="login-card">
           <div className="card-header">
-            <span className="eyebrow">Mitglieds-Login</span>
             <h1 className="title">Anmelden</h1>
           </div>
 
