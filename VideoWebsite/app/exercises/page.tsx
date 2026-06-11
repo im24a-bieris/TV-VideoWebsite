@@ -33,7 +33,7 @@ export default function ExercisesPage() {
   return (
     <main className="p-6">
       <Link href="/" className="back-link">
-        Zurück
+        &larr; Zurück
       </Link>
 
       <h1 className="text-3xl font-bold mb-6">Übungen</h1>

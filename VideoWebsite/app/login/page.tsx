@@ -6,9 +6,11 @@ export default function LoginPage() {
     <main>
       <section className="login-page">
         <div className="login-card">
-          <Link href="/" className="login-brand-link">
-            <span className="brand-icon-login">TV Männedorf</span>
-          </Link>
+          <div className="login-brand">
+              <Link href="/" className="brand-icon-login">
+                TV Männedorf
+              </Link>
+          </div>
 
           <div className="card-header">
             <h1 className="title">Anmelden</h1>
@@ -48,8 +50,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Link href="/" className="login-back-link">
-          ← Zurück
+        <Link href="/" className="back-link">
+          &larr; Zurück
         </Link>
       </section>
     </main>
