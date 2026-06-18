@@ -11,6 +11,7 @@ export default function RootLayout({
         <div className="background-logo" />
         <div className="background-overlay" />
         <div className="page-content">{children}</div>
+        <footer className="site-footer">© 2026 Samuel</footer>
       </body>
     </html>
   );
