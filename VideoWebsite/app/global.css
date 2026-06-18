@@ -84,7 +84,7 @@ a {
   place-items: center;
   width: 150px;
   height: 36px;
-  color: var(--blue);
+  color: var(--black);
   background: var(--gold);
   border-radius: 12px;
   font-size: 1rem;
