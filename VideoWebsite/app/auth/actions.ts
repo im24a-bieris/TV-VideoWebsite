@@ -15,10 +15,10 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
-    redirect("/login?error=login");
+    redirect("/login?error=credentials");
   }
 
-  redirect("/exercises");
+  redirect("/account");
 }
 
 export async function register(formData: FormData) {
@@ -34,7 +34,7 @@ export async function register(formData: FormData) {
     redirect("/register?error=passwords");
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -46,8 +46,26 @@ export async function register(formData: FormData) {
   });
 
   if (error) {
+    const message = error.message.toLowerCase();
+
+    if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
+      redirect("/register?error=email-exists");
+    }
+
     redirect("/register?error=register");
   }
 
-  redirect("/login?message=check-email");
+  if (data.user?.identities && data.user.identities.length === 0) {
+    redirect("/register?error=email-exists");
+  }
+
+  redirect("/account");
+}
+
+export async function logout() {
+  const supabase = await createClient();
+
+  await supabase.auth.signOut();
+
+  redirect("/login?message=logged-out");
 }

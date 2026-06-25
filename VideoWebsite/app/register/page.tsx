@@ -2,7 +2,20 @@
 import "../global.css";
 import { register } from "../auth/actions";
 
-export default function RegisterPage() {
+const registerMessages: Record<string, string> = {
+  passwords: "Die Passwörter stimmen nicht überein.",
+  "email-exists": "Diese E-Mail-Adresse ist bereits registriert.",
+  register: "Registrierung fehlgeschlagen. Bitte prüfe deine Angaben.",
+};
+
+type RegisterPageProps = {
+  searchParams: Promise<{ error?: string }>;
+};
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+  const { error } = await searchParams;
+  const errorMessage = error ? registerMessages[error] : undefined;
+
   return (
     <main>
       <section className="login-page">
@@ -22,6 +35,12 @@ export default function RegisterPage() {
           </p>
 
           <form action={register} className="login-form">
+            {errorMessage ? (
+              <p className="form-message form-message-error" role="alert">
+                {errorMessage}
+              </p>
+            ) : null}
+
             <div className="register-grid">
               <label>
                 Vorname

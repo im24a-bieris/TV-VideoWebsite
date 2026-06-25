@@ -2,7 +2,23 @@
 import "../global.css";
 import { login } from "../auth/actions";
 
-export default function LoginPage() {
+const loginMessages: Record<string, string> = {
+  credentials: "E-Mail oder Passwort ist falsch.",
+};
+
+const statusMessages: Record<string, string> = {
+  "logged-out": "Du wurdest abgemeldet.",
+};
+
+type LoginPageProps = {
+  searchParams: Promise<{ error?: string; message?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { error, message } = await searchParams;
+  const errorMessage = error ? loginMessages[error] : undefined;
+  const statusMessage = message ? statusMessages[message] : undefined;
+
   return (
     <main>
       <section className="login-page">
@@ -22,6 +38,16 @@ export default function LoginPage() {
           </p>
 
           <form action={login} className="login-form">
+            {errorMessage ? (
+              <p className="form-message form-message-error" role="alert">
+                {errorMessage}
+              </p>
+            ) : null}
+
+            {statusMessage ? (
+              <p className="form-message form-message-success">{statusMessage}</p>
+            ) : null}
+
             <label>
               E-Mail-Adresse
               <input name="email" type="email" required placeholder="name@beispiel.ch" />

@@ -340,6 +340,27 @@ select:focus {
   margin-top: 1.5rem;
 }
 
+.form-message {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.form-message-error {
+  color: #ffefef;
+  background: rgba(180, 36, 36, 0.34);
+  border: 1px solid rgba(255, 112, 112, 0.42);
+}
+
+.form-message-success {
+  color: #ebfff4;
+  background: rgba(31, 128, 72, 0.34);
+  border: 1px solid rgba(98, 210, 146, 0.42);
+}
+
 .register-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -478,6 +499,89 @@ select:focus {
   margin: 1.5rem 0 0;
   color: var(--muted-text);
   line-height: 1.6;
+}
+
+.account-page {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--page-bg);
+}
+
+.account-shell {
+  display: grid;
+  gap: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.account-logout-button {
+  min-width: 150px;
+  color: var(--yellow);
+}
+
+.account-panel {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 8px solid var(--yellow);
+  border-radius: 16px;
+}
+
+.account-title {
+  max-width: 700px;
+  margin: 0;
+  color: var(--black);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.account-subtitle {
+  max-width: 620px;
+  margin: 1rem 0 0;
+  color: var(--muted-text);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.account-details {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.account-details div {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  background: var(--page-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.account-details dt {
+  color: var(--muted-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.account-details dd {
+  margin: 0;
+  color: var(--black);
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+.account-actions {
+  display: flex;
+  margin-top: 2rem;
 }
 
 @media (max-width: 760px) {
