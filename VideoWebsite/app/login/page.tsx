@@ -1,5 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import "../global.css";
+import { login } from "../auth/actions";
 
 export default function LoginPage() {
   return (
@@ -7,9 +8,9 @@ export default function LoginPage() {
       <section className="login-page">
         <div className="login-card">
           <div className="login-brand">
-              <Link href="/" className="brand-icon-login">
-                TV Männedorf
-              </Link>
+            <Link href="/" className="brand-icon-login">
+              TV Männedorf
+            </Link>
           </div>
 
           <div className="card-header">
@@ -20,15 +21,15 @@ export default function LoginPage() {
             Melde dich mit deiner E-Mail und deinem Passwort an, um alle Trainingsdaten zu sehen.
           </p>
 
-          <form className="login-form">
+          <form action={login} className="login-form">
             <label>
               E-Mail-Adresse
-              <input type="email" placeholder="name@beispiel.ch" />
+              <input name="email" type="email" required placeholder="name@beispiel.ch" />
             </label>
 
             <label>
               Passwort
-              <input type="password" placeholder="••••••••" />
+              <input name="password" type="password" required placeholder="********" />
             </label>
 
             <div className="form-actions">

@@ -1,5 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import "../global.css";
+import { register } from "../auth/actions";
 
 export default function RegisterPage() {
   return (
@@ -20,32 +21,32 @@ export default function RegisterPage() {
             Erstelle dein Konto, um Übungen zu speichern und deinen Trainingsfortschritt zu verfolgen.
           </p>
 
-          <form className="login-form">
+          <form action={register} className="login-form">
             <div className="register-grid">
               <label>
                 Vorname
-                <input type="text" placeholder="Max" />
+                <input name="firstName" type="text" required placeholder="Max" />
               </label>
 
               <label>
                 Nachname
-                <input type="text" placeholder="Muster" />
+                <input name="lastName" type="text" required placeholder="Muster" />
               </label>
             </div>
 
             <label>
               E-Mail-Adresse
-              <input type="email" placeholder="name@beispiel.ch" />
+              <input name="email" type="email" required placeholder="name@beispiel.ch" />
             </label>
 
             <label>
               Passwort
-              <input type="password" placeholder="Mindestens 8 Zeichen" />
+              <input name="password" type="password" required placeholder="Mindestens 8 Zeichen" />
             </label>
 
             <label>
               Passwort bestätigen
-              <input type="password" placeholder="Passwort wiederholen" />
+              <input name="passwordConfirm" type="password" required placeholder="Passwort wiederholen" />
             </label>
 
             <div className="form-actions">
