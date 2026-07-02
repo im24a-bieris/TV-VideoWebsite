@@ -13,7 +13,12 @@ const registerMessages: Record<string, string> = {
   "missing-fields": "Bitte fülle alle Felder aus.",
   "password-short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
   config: "Die Registrierung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
+  invalid: "Bitte gib eine echte E-Mail-Adresse ein. Beispieladressen wie beispiel.ch sind nicht erlaubt.",
 };
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 function RegisterForm() {
   const router = useRouter();
@@ -37,6 +42,12 @@ function RegisterForm() {
 
     if (!firstName || !lastName || !email || !password || !passwordConfirm) {
       setErrorMessage(registerMessages["missing-fields"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!isValidEmail(email) || email.includes("beispiel") || email.includes("example")) {
+      setErrorMessage(registerMessages.invalid);
       setIsSubmitting(false);
       return;
     }
@@ -66,9 +77,12 @@ function RegisterForm() {
     });
 
     if (error) {
+      console.error("Supabase register error", error);
       const message = error.message.toLowerCase();
       if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
         setErrorMessage(registerMessages["email-exists"]);
+      } else if (message.includes("invalid") || message.includes("valid") || message.includes("mail")) {
+        setErrorMessage(registerMessages.invalid);
       } else {
         setErrorMessage(registerMessages.register);
       }
@@ -130,7 +144,7 @@ function RegisterForm() {
 
             <label>
               E-Mail-Adresse
-              <input name="email" type="email" required placeholder="name@beispiel.ch" />
+              <input name="email" type="email" required placeholder="max.mustermann@mail.ch" />
             </label>
 
             <label>
