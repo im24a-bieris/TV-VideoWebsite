@@ -4,10 +4,13 @@ import { login } from "../auth/actions";
 
 const loginMessages: Record<string, string> = {
   credentials: "E-Mail oder Passwort ist falsch.",
+  "missing-fields": "Bitte fülle E-Mail und Passwort aus.",
+  config: "Die Anmeldung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
 };
 
 const statusMessages: Record<string, string> = {
   "logged-out": "Du wurdest abgemeldet.",
+  "check-email": "Bitte bestätige deine E-Mail-Adresse über den Link in der E-Mail.",
 };
 
 type LoginPageProps = {

@@ -6,6 +6,9 @@ const registerMessages: Record<string, string> = {
   passwords: "Die Passwörter stimmen nicht überein.",
   "email-exists": "Diese E-Mail-Adresse ist bereits registriert.",
   register: "Registrierung fehlgeschlagen. Bitte prüfe deine Angaben.",
+  "missing-fields": "Bitte fülle alle Felder aus.",
+  "password-short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+  config: "Die Registrierung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
 };
 
 type RegisterPageProps = {
