@@ -14,7 +14,8 @@ function getErrorRedirect(path: string, error: string) {
 async function getSupabaseForAction(path: string) {
   try {
     return await createClient();
-  } catch {
+  } catch (error) {
+    console.error("Supabase auth init failed", error);
     getErrorRedirect(path, "config");
   }
 

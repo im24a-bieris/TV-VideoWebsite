@@ -1,6 +1,10 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import "../global.css";
-import { register } from "../auth/actions";
+import { createClient } from "@/lib/supabase/client";
 
 const registerMessages: Record<string, string> = {
   passwords: "Die Passwörter stimmen nicht überein.",
@@ -11,13 +15,81 @@ const registerMessages: Record<string, string> = {
   config: "Die Registrierung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
 };
 
-type RegisterPageProps = {
-  searchParams: Promise<{ error?: string }>;
-};
+function RegisterForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    () => registerMessages[searchParams.get("error") ?? ""]
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-export default async function RegisterPage({ searchParams }: RegisterPageProps) {
-  const { error } = await searchParams;
-  const errorMessage = error ? registerMessages[error] : undefined;
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage(undefined);
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "").trim();
+    const passwordConfirm = String(formData.get("passwordConfirm") ?? "").trim();
+    const firstName = String(formData.get("firstName") ?? "").trim();
+    const lastName = String(formData.get("lastName") ?? "").trim();
+
+    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+      setErrorMessage(registerMessages["missing-fields"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorMessage(registerMessages["password-short"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      setErrorMessage(registerMessages.passwords);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
+    });
+
+    if (error) {
+      const message = error.message.toLowerCase();
+      if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
+        setErrorMessage(registerMessages["email-exists"]);
+      } else {
+        setErrorMessage(registerMessages.register);
+      }
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (data.user?.identities && data.user.identities.length === 0) {
+      setErrorMessage(registerMessages["email-exists"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!data.session) {
+      router.push("/login?message=check-email");
+      return;
+    }
+
+    setIsSubmitting(false);
+    router.push("/account");
+  }
 
   return (
     <main>
@@ -37,7 +109,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
             Erstelle dein Konto, um Übungen zu speichern und deinen Trainingsfortschritt zu verfolgen.
           </p>
 
-          <form action={register} className="login-form">
+          <form onSubmit={handleSubmit} className="login-form">
             {errorMessage ? (
               <p className="form-message form-message-error" role="alert">
                 {errorMessage}
@@ -72,8 +144,8 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
             </label>
 
             <div className="form-actions">
-              <button type="submit" className="button button-primary">
-                Konto erstellen
+              <button type="submit" className="button button-primary" disabled={isSubmitting}>
+                {isSubmitting ? "Erstelle Konto..." : "Konto erstellen"}
               </button>
             </div>
           </form>
@@ -95,5 +167,23 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
         </Link>
       </section>
     </main>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <main>
+          <section className="login-page">
+            <div className="login-card">
+              <p className="subtitle">Lädt...</p>
+            </div>
+          </section>
+        </main>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

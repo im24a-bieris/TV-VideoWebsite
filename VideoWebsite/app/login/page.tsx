@@ -1,6 +1,10 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import "../global.css";
-import { login } from "../auth/actions";
+import { createClient } from "@/lib/supabase/client";
 
 const loginMessages: Record<string, string> = {
   credentials: "E-Mail oder Passwort ist falsch.",
@@ -13,14 +17,45 @@ const statusMessages: Record<string, string> = {
   "check-email": "Bitte bestätige deine E-Mail-Adresse über den Link in der E-Mail.",
 };
 
-type LoginPageProps = {
-  searchParams: Promise<{ error?: string; message?: string }>;
-};
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    () => loginMessages[searchParams.get("error") ?? ""]
+  );
+  const [statusMessage, setStatusMessage] = useState<string | undefined>(
+    () => statusMessages[searchParams.get("message") ?? ""]
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error, message } = await searchParams;
-  const errorMessage = error ? loginMessages[error] : undefined;
-  const statusMessage = message ? statusMessages[message] : undefined;
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage(undefined);
+    setStatusMessage(undefined);
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "").trim();
+
+    if (!email || !password) {
+      setErrorMessage(loginMessages["missing-fields"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      setErrorMessage(loginMessages.credentials);
+      setIsSubmitting(false);
+      return;
+    }
+
+    setIsSubmitting(false);
+    router.push("/account");
+  }
 
   return (
     <main>
@@ -40,7 +75,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             Melde dich mit deiner E-Mail und deinem Passwort an, um alle Trainingsdaten zu sehen.
           </p>
 
-          <form action={login} className="login-form">
+          <form onSubmit={handleSubmit} className="login-form">
             {errorMessage ? (
               <p className="form-message form-message-error" role="alert">
                 {errorMessage}
@@ -62,8 +97,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </label>
 
             <div className="form-actions">
-              <button type="submit" className="button button-primary">
-                Anmelden
+              <button type="submit" className="button button-primary" disabled={isSubmitting}>
+                {isSubmitting ? "Anmelden..." : "Anmelden"}
               </button>
             </div>
           </form>
@@ -85,5 +120,23 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </Link>
       </section>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main>
+          <section className="login-page">
+            <div className="login-card">
+              <p className="subtitle">Lädt...</p>
+            </div>
+          </section>
+        </main>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { logout } from "../auth/actions";
 import { createClient } from "@/lib/supabase/server";
 import "../global.css";
+import { LogoutButton } from "./logout-button";
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -27,11 +27,7 @@ export default async function AccountPage() {
             TV Männedorf
           </Link>
 
-          <form action={logout}>
-            <button type="submit" className="button account-logout-button">
-              Abmelden
-            </button>
-          </form>
+          <LogoutButton />
         </div>
 
         <div className="account-panel">
