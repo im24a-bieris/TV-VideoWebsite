@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import "../global.css";
-import { createClient } from "@/lib/supabase/client";
+import { registerLocalUser } from "@/lib/auth/client";
 
 const registerMessages: Record<string, string> = {
   passwords: "Die Passwörter stimmen nicht überein.",
@@ -12,8 +12,7 @@ const registerMessages: Record<string, string> = {
   register: "Registrierung fehlgeschlagen. Bitte prüfe deine Angaben.",
   "missing-fields": "Bitte fülle alle Felder aus.",
   "password-short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
-  config: "Die Registrierung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
-  invalid: "Bitte gib eine echte E-Mail-Adresse ein. Beispieladressen wie beispiel.ch sind nicht erlaubt.",
+  invalid: "Bitte gib eine echte E-Mail-Adresse ein.",
 };
 
 function isValidEmail(email: string) {
@@ -33,81 +32,48 @@ function RegisterForm() {
     setIsSubmitting(true);
     setErrorMessage(undefined);
 
-    try {
-      const formData = new FormData(event.currentTarget);
-      const email = String(formData.get("email") ?? "").trim().toLowerCase();
-      const password = String(formData.get("password") ?? "").trim();
-      const passwordConfirm = String(formData.get("passwordConfirm") ?? "").trim();
-      const firstName = String(formData.get("firstName") ?? "").trim();
-      const lastName = String(formData.get("lastName") ?? "").trim();
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "").trim();
+    const passwordConfirm = String(formData.get("passwordConfirm") ?? "").trim();
+    const firstName = String(formData.get("firstName") ?? "").trim();
+    const lastName = String(formData.get("lastName") ?? "").trim();
+    const username = `${firstName} ${lastName}`.trim();
 
-      if (!firstName || !lastName || !email || !password || !passwordConfirm) {
-        setErrorMessage(registerMessages["missing-fields"]);
-        return;
-      }
-
-      if (!isValidEmail(email) || email.includes("beispiel") || email.includes("example")) {
-        setErrorMessage(registerMessages.invalid);
-        return;
-      }
-
-      if (password.length < 8) {
-        setErrorMessage(registerMessages["password-short"]);
-        return;
-      }
-
-      if (password !== passwordConfirm) {
-        setErrorMessage(registerMessages.passwords);
-        return;
-      }
-
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-          },
-        },
-      });
-
-      if (error) {
-        console.error("Supabase register error", error);
-        const message = error.message.toLowerCase();
-        if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
-          setErrorMessage(registerMessages["email-exists"]);
-        } else if (message.includes("invalid") || message.includes("valid") || message.includes("mail")) {
-          setErrorMessage(registerMessages.invalid);
-        } else {
-          setErrorMessage(registerMessages.register);
-        }
-        return;
-      }
-
-      if (data.user?.identities && data.user.identities.length === 0) {
-        setErrorMessage(registerMessages["email-exists"]);
-        return;
-      }
-
-      if (!data.session) {
-        router.replace("/login?message=check-email");
-        return;
-      }
-
-      router.replace("/account");
-    } catch (error) {
-      console.error("Supabase register error", error);
-      const message = error instanceof Error ? error.message.toLowerCase() : "";
-      if (message.includes("fetch") || message.includes("network") || message.includes("timed out") || message.includes("dns") || message.includes("resolve")) {
-        setErrorMessage("Die Verbindung zum Registrierungsdienst ist gerade nicht verfügbar. Bitte prüfe deine Internetverbindung oder versuche es später erneut.");
-      } else {
-        setErrorMessage("Die Registrierung ist gerade nicht verfügbar. Bitte versuche es später erneut.");
-      }
-    } finally {
+    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+      setErrorMessage(registerMessages["missing-fields"]);
       setIsSubmitting(false);
+      return;
     }
+
+    if (!isValidEmail(email)) {
+      setErrorMessage(registerMessages.invalid);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorMessage(registerMessages["password-short"]);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      setErrorMessage(registerMessages.passwords);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const result = await registerLocalUser({ email, password, username });
+
+    if (result.error) {
+      setErrorMessage(result.error);
+      setIsSubmitting(false);
+      return;
+    }
+
+    router.replace("/exercises");
+    setIsSubmitting(false);
   }
 
   return (
@@ -125,7 +91,7 @@ function RegisterForm() {
           </div>
 
           <p className="subtitle">
-            Erstelle dein Konto, um Übungen zu speichern und deinen Trainingsfortschritt zu verfolgen.
+            Erstelle dein Konto und starte direkt mit den Übungen.
           </p>
 
           <form onSubmit={handleSubmit} className="login-form">

@@ -31,6 +31,32 @@ body {
   background: var(--page-bg);
 }
 
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 5vw;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.topbar-nav a:hover {
+  color: var(--blue);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -433,9 +459,22 @@ select:focus {
 
 .button-primary:hover,
 .button-secondary:hover,
-.button-ghost:hover {
+.button-ghost:hover,
+.button-danger:hover,
+.profile-action-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+.button-danger {
+  color: var(--white);
+  background: #b42318;
+  border-color: #b42318;
+}
+
+.profile-action-button {
+  min-width: 140px;
+  color: var(--yellow);
 }
 
 .button-primary:hover {
@@ -492,6 +531,11 @@ select:focus {
   .login-footer {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -713,6 +757,15 @@ select:focus {
     min-height: 100vh;
     padding: 2rem 1rem 3rem;
     background: var(--yellow);
+  }
+
+  .profile-shell {
+    padding: 0 1rem 2rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .button-group {

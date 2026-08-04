@@ -4,17 +4,15 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import "../global.css";
-import { createClient } from "@/lib/supabase/client";
+import { loginLocalUser } from "@/lib/auth/client";
 
 const loginMessages: Record<string, string> = {
   credentials: "E-Mail oder Passwort ist falsch.",
   "missing-fields": "Bitte fülle E-Mail und Passwort aus.",
-  config: "Die Anmeldung ist gerade nicht verfügbar. Bitte prüfe die Supabase-Konfiguration.",
 };
 
 const statusMessages: Record<string, string> = {
   "logged-out": "Du wurdest abgemeldet.",
-  "check-email": "Bitte bestätige deine E-Mail-Adresse über den Link in der E-Mail.",
 };
 
 function LoginForm() {
@@ -34,41 +32,26 @@ function LoginForm() {
     setErrorMessage(undefined);
     setStatusMessage(undefined);
 
-    try {
-      const formData = new FormData(event.currentTarget);
-      const email = String(formData.get("email") ?? "").trim().toLowerCase();
-      const password = String(formData.get("password") ?? "").trim();
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "").trim();
 
-      if (!email || !password) {
-        setErrorMessage(loginMessages["missing-fields"]);
-        return;
-      }
-
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        setErrorMessage(loginMessages.credentials);
-        return;
-      }
-
-      if (!data.session) {
-        setErrorMessage("Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuche es erneut.");
-        return;
-      }
-
-      router.replace("/account");
-    } catch (error) {
-      console.error("Supabase login error", error);
-      const message = error instanceof Error ? error.message.toLowerCase() : "";
-      if (message.includes("fetch") || message.includes("network") || message.includes("timed out") || message.includes("dns") || message.includes("resolve")) {
-        setErrorMessage("Die Verbindung zum Anmeldedienst ist gerade nicht verfügbar. Bitte prüfe deine Internetverbindung oder versuche es später erneut.");
-      } else {
-        setErrorMessage("Die Anmeldung ist gerade nicht verfügbar. Bitte versuche es später erneut.");
-      }
-    } finally {
+    if (!email || !password) {
+      setErrorMessage(loginMessages["missing-fields"]);
       setIsSubmitting(false);
+      return;
     }
+
+    const result = await loginLocalUser({ email, password });
+
+    if (result.error) {
+      setErrorMessage(result.error);
+      setIsSubmitting(false);
+      return;
+    }
+
+    router.replace("/exercises");
+    setIsSubmitting(false);
   }
 
   return (
@@ -86,7 +69,7 @@ function LoginForm() {
           </div>
 
           <p className="subtitle">
-            Melde dich mit deiner E-Mail und deinem Passwort an, um alle Trainingsdaten zu sehen.
+            Melde dich mit deiner E-Mail und deinem Passwort an, um deine Übungen zu entdecken.
           </p>
 
           <form onSubmit={handleSubmit} className="login-form">
