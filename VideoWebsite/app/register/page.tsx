@@ -33,76 +33,81 @@ function RegisterForm() {
     setIsSubmitting(true);
     setErrorMessage(undefined);
 
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "").trim().toLowerCase();
-    const password = String(formData.get("password") ?? "").trim();
-    const passwordConfirm = String(formData.get("passwordConfirm") ?? "").trim();
-    const firstName = String(formData.get("firstName") ?? "").trim();
-    const lastName = String(formData.get("lastName") ?? "").trim();
+    try {
+      const formData = new FormData(event.currentTarget);
+      const email = String(formData.get("email") ?? "").trim().toLowerCase();
+      const password = String(formData.get("password") ?? "").trim();
+      const passwordConfirm = String(formData.get("passwordConfirm") ?? "").trim();
+      const firstName = String(formData.get("firstName") ?? "").trim();
+      const lastName = String(formData.get("lastName") ?? "").trim();
 
-    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
-      setErrorMessage(registerMessages["missing-fields"]);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!isValidEmail(email) || email.includes("beispiel") || email.includes("example")) {
-      setErrorMessage(registerMessages.invalid);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (password.length < 8) {
-      setErrorMessage(registerMessages["password-short"]);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (password !== passwordConfirm) {
-      setErrorMessage(registerMessages.passwords);
-      setIsSubmitting(false);
-      return;
-    }
-
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-        },
-      },
-    });
-
-    if (error) {
-      console.error("Supabase register error", error);
-      const message = error.message.toLowerCase();
-      if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
-        setErrorMessage(registerMessages["email-exists"]);
-      } else if (message.includes("invalid") || message.includes("valid") || message.includes("mail")) {
-        setErrorMessage(registerMessages.invalid);
-      } else {
-        setErrorMessage(registerMessages.register);
+      if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+        setErrorMessage(registerMessages["missing-fields"]);
+        return;
       }
+
+      if (!isValidEmail(email) || email.includes("beispiel") || email.includes("example")) {
+        setErrorMessage(registerMessages.invalid);
+        return;
+      }
+
+      if (password.length < 8) {
+        setErrorMessage(registerMessages["password-short"]);
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        setErrorMessage(registerMessages.passwords);
+        return;
+      }
+
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          },
+        },
+      });
+
+      if (error) {
+        console.error("Supabase register error", error);
+        const message = error.message.toLowerCase();
+        if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
+          setErrorMessage(registerMessages["email-exists"]);
+        } else if (message.includes("invalid") || message.includes("valid") || message.includes("mail")) {
+          setErrorMessage(registerMessages.invalid);
+        } else {
+          setErrorMessage(registerMessages.register);
+        }
+        return;
+      }
+
+      if (data.user?.identities && data.user.identities.length === 0) {
+        setErrorMessage(registerMessages["email-exists"]);
+        return;
+      }
+
+      if (!data.session) {
+        router.replace("/login?message=check-email");
+        return;
+      }
+
+      router.replace("/account");
+    } catch (error) {
+      console.error("Supabase register error", error);
+      const message = error instanceof Error ? error.message.toLowerCase() : "";
+      if (message.includes("fetch") || message.includes("network") || message.includes("timed out") || message.includes("dns") || message.includes("resolve")) {
+        setErrorMessage("Die Verbindung zum Registrierungsdienst ist gerade nicht verfügbar. Bitte prüfe deine Internetverbindung oder versuche es später erneut.");
+      } else {
+        setErrorMessage("Die Registrierung ist gerade nicht verfügbar. Bitte versuche es später erneut.");
+      }
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    if (data.user?.identities && data.user.identities.length === 0) {
-      setErrorMessage(registerMessages["email-exists"]);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!data.session) {
-      router.push("/login?message=check-email");
-      return;
-    }
-
-    setIsSubmitting(false);
-    router.push("/account");
   }
 
   return (

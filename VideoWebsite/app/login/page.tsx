@@ -34,27 +34,41 @@ function LoginForm() {
     setErrorMessage(undefined);
     setStatusMessage(undefined);
 
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "").trim().toLowerCase();
-    const password = String(formData.get("password") ?? "").trim();
+    try {
+      const formData = new FormData(event.currentTarget);
+      const email = String(formData.get("email") ?? "").trim().toLowerCase();
+      const password = String(formData.get("password") ?? "").trim();
 
-    if (!email || !password) {
-      setErrorMessage(loginMessages["missing-fields"]);
+      if (!email || !password) {
+        setErrorMessage(loginMessages["missing-fields"]);
+        return;
+      }
+
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        setErrorMessage(loginMessages.credentials);
+        return;
+      }
+
+      if (!data.session) {
+        setErrorMessage("Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuche es erneut.");
+        return;
+      }
+
+      router.replace("/account");
+    } catch (error) {
+      console.error("Supabase login error", error);
+      const message = error instanceof Error ? error.message.toLowerCase() : "";
+      if (message.includes("fetch") || message.includes("network") || message.includes("timed out") || message.includes("dns") || message.includes("resolve")) {
+        setErrorMessage("Die Verbindung zum Anmeldedienst ist gerade nicht verfügbar. Bitte prüfe deine Internetverbindung oder versuche es später erneut.");
+      } else {
+        setErrorMessage("Die Anmeldung ist gerade nicht verfügbar. Bitte versuche es später erneut.");
+      }
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      setErrorMessage(loginMessages.credentials);
-      setIsSubmitting(false);
-      return;
-    }
-
-    setIsSubmitting(false);
-    router.push("/account");
   }
 
   return (
