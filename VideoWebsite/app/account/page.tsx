@@ -1,21 +1,33 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import "../global.css";
-import { LogoutButton } from "./logout-button";
+"use client";
 
-export default async function AccountPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { LogoutButton } from "./logout-button";
+import { useLocalUser } from "@/lib/auth/client";
+
+export default function AccountPage() {
+  const router = useRouter();
+  const user = useLocalUser();
+
+  useEffect(() => {
+    if (user === null) {
+      router.replace("/login");
+    }
+  }, [router, user]);
 
   if (!user) {
-    redirect("/login");
+    return (
+      <main className="account-page">
+        <section className="account-shell">
+          <p className="subtitle">Lädt Konto…</p>
+        </section>
+      </main>
+    );
   }
 
-  const firstName = typeof user.user_metadata.first_name === "string" ? user.user_metadata.first_name : "";
-  const lastName = typeof user.user_metadata.last_name === "string" ? user.user_metadata.last_name : "";
+  const [firstName, ...rest] = user.username.split(" ");
+  const lastName = rest.join(" ");
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email;
 
   return (

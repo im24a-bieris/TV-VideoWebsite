@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +23,7 @@ function getInitials(username: string) {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<ReturnType<typeof getCurrentLocalUser>>(null);
+  const [user, setUser] = useState<ReturnType<typeof getCurrentLocalUser> | undefined>(undefined);
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState("");
   const [password, setPassword] = useState("");
@@ -49,15 +50,21 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    if (!user) {
+    if (user === null) {
       router.replace("/login");
     }
   }, [router, user]);
 
   const displayName = useMemo(() => user?.username || user?.email || "Profil", [user]);
 
-  if (!user) {
-    return <main className="profile-page"><section className="profile-shell"><p className="subtitle">Lädt Profil…</p></section></main>;
+  if (user === undefined || user === null) {
+    return (
+      <main className="profile-page">
+        <section className="profile-shell">
+          <p className="subtitle">Lädt Profil…</p>
+        </section>
+      </main>
+    );
   }
 
   async function handleSaveProfile(event: React.FormEvent) {
@@ -145,7 +152,18 @@ export default function ProfilePage() {
         <div className="profile-card">
           <div className="profile-hero">
             <div className="profile-avatar" aria-hidden="true">
-              {user.avatar ? <img src={user.avatar} alt="Profilbild" className="profile-avatar-image" /> : getInitials(user.username || user.email)}
+              {user.avatar ? (
+                <Image
+                  src={user.avatar}
+                  alt="Profilbild"
+                  width={96}
+                  height={96}
+                  className="profile-avatar-image"
+                  unoptimized
+                />
+              ) : (
+                getInitials(user.username || user.email)
+              )}
             </div>
             <div>
               <p className="eyebrow">Profil</p>

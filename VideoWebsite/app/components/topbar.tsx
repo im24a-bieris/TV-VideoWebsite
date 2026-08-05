@@ -1,18 +1,19 @@
 "use client";
 
+"use client";
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getCurrentLocalUser } from "@/lib/auth/client";
+import { useRouter } from "next/navigation";
+import { logoutLocalUser, useLocalUser } from "@/lib/auth/client";
 
 export function TopBar() {
-  const [user, setUser] = useState<ReturnType<typeof getCurrentLocalUser>>(null);
+  const router = useRouter();
+  const user = useLocalUser();
 
-  useEffect(() => {
-    const syncUser = () => setUser(getCurrentLocalUser());
-    syncUser();
-    window.addEventListener("auth:change", syncUser);
-    return () => window.removeEventListener("auth:change", syncUser);
-  }, []);
+  function handleLogout() {
+    logoutLocalUser();
+    router.push("/login?message=logged-out");
+  }
 
   return (
     <header className="topbar">
@@ -22,7 +23,19 @@ export function TopBar() {
       </Link>
       <nav className="topbar-nav">
         <Link href="/exercises">Übungen</Link>
-        {user ? <Link href="/profile">Profil</Link> : null}
+        {user ? (
+          <>
+            <Link href="/profile">Profil</Link>
+            <button type="button" className="button button-light topbar-logout-button" onClick={handleLogout}>
+              Abmelden
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/login">Anmelden</Link>
+            <Link href="/register">Registrieren</Link>
+          </>
+        )}
       </nav>
     </header>
   );

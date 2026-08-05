@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 export type AuthUser = {
   id: string;
   email: string;
@@ -9,6 +13,7 @@ export type AuthUser = {
 
 const USERS_STORAGE_KEY = "tv-video-users";
 const CURRENT_USER_STORAGE_KEY = "tv-video-current-user";
+const AUTH_CHANGE_EVENT = "auth:change";
 
 function readStorage<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") {
@@ -33,7 +38,7 @@ function writeStorage<T>(key: string, value: T) {
 
 function emitAuthChange() {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event("auth:change"));
+    window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
   }
 }
 
@@ -120,6 +125,19 @@ export async function loginLocalUser(payload: { email: string; password: string 
 
 export function getCurrentLocalUser() {
   return readStorage<AuthUser | null>(CURRENT_USER_STORAGE_KEY, null);
+}
+
+export function useLocalUser() {
+  const [user, setUser] = useState<AuthUser | null | undefined>(undefined);
+
+  useEffect(() => {
+    const syncUser = () => setUser(getCurrentLocalUser());
+    syncUser();
+    window.addEventListener(AUTH_CHANGE_EVENT, syncUser);
+    return () => window.removeEventListener(AUTH_CHANGE_EVENT, syncUser);
+  }, []);
+
+  return user;
 }
 
 export function logoutLocalUser() {
