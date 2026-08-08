@@ -40,9 +40,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 5vw;
-  background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(12px);
 }
 
 .topbar-nav {
