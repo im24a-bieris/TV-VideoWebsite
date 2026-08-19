@@ -38,6 +38,16 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
+    console.error("Supabase login failed", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+
+    if (error.message.toLowerCase().includes("not confirmed")) {
+      getErrorRedirect("/login", "email-not-confirmed");
+    }
+
     getErrorRedirect("/login", "credentials");
   }
 
