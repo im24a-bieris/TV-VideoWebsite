@@ -1,12 +1,19 @@
 ﻿import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
 import { logout } from "@/app/auth/actions";
+import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
 export async function TopBar() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: User | null = null;
+
+  if (getSupabaseConfig()) {
+    const supabase = await createClient();
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+    user = currentUser;
+  }
 
   return (
     <header className="topbar">
