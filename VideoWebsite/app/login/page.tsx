@@ -4,6 +4,7 @@ import { login } from "../auth/actions";
 
 const loginMessages: Record<string, string> = {
   credentials: "E-Mail oder Passwort ist falsch.",
+  "email-not-confirmed": "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in deinem Postfach.",
   "missing-fields": "Bitte fülle E-Mail und Passwort aus.",
   config: "Supabase ist noch nicht korrekt konfiguriert.",
 };
