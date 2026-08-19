@@ -8,7 +8,8 @@ const registerMessages: Record<string, string> = {
   register: "Registrierung fehlgeschlagen. Bitte prüfe deine Angaben.",
   "missing-fields": "Bitte fülle alle Felder aus.",
   "password-short": "Das Passwort muss mindestens 8 Zeichen lang sein.",
-  invalid: "Bitte gib eine echte E-Mail-Adresse ein.",
+  invalid: "Diese E-Mail-Adresse wird von Supabase nicht akzeptiert. Verwende eine echte, erreichbare Adresse.",
+  "rate-limit": "Zu viele Registrierungsversuche. Bitte warte einige Minuten und versuche es erneut.",
   config: "Supabase ist noch nicht korrekt konfiguriert.",
 };
 
