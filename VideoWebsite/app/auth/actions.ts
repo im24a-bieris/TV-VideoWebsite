@@ -78,9 +78,22 @@ export async function register(formData: FormData) {
 
   if (error) {
     const message = error.message.toLowerCase();
+    console.error("Supabase registration failed", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
 
     if (message.includes("already") || message.includes("registered") || message.includes("exists")) {
       getErrorRedirect("/register", "email-exists");
+    }
+
+    if (message.includes("invalid") || message.includes("email")) {
+      getErrorRedirect("/register", "invalid");
+    }
+
+    if (message.includes("rate limit") || message.includes("too many")) {
+      getErrorRedirect("/register", "rate-limit");
     }
 
     getErrorRedirect("/register", "register");
