@@ -20,3 +20,13 @@ export function getSupabaseConfigOrThrow() {
 
   return config;
 }
+
+export function getSupabaseServiceRoleKeyOrThrow() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not configured.");
+  }
+
+  return serviceRoleKey;
+}

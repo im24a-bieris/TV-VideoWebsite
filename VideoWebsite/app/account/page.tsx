@@ -1,33 +1,20 @@
-"use client";
-
-import Link from "next/link";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+﻿import Link from "next/link";
+import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
-import { useLocalUser } from "@/lib/auth/client";
+import { createClient } from "@/lib/supabase/server";
 
-export default function AccountPage() {
-  const router = useRouter();
-  const user = useLocalUser();
-
-  useEffect(() => {
-    if (user === null) {
-      router.replace("/login");
-    }
-  }, [router, user]);
+export default async function AccountPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return (
-      <main className="account-page">
-        <section className="account-shell">
-          <p className="subtitle">Lädt Konto…</p>
-        </section>
-      </main>
-    );
+    redirect("/login");
   }
 
-  const [firstName, ...rest] = user.username.split(" ");
-  const lastName = rest.join(" ");
+  const firstName = typeof user.user_metadata.first_name === "string" ? user.user_metadata.first_name : "";
+  const lastName = typeof user.user_metadata.last_name === "string" ? user.user_metadata.last_name : "";
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email;
 
   return (
@@ -63,6 +50,9 @@ export default function AccountPage() {
           <div className="account-actions">
             <Link href="/exercises" className="button button-primary">
               Übungen ansehen
+            </Link>
+            <Link href="/upload" className="button">
+              Video hochladen
             </Link>
           </div>
         </div>

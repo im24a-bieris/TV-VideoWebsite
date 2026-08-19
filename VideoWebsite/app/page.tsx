@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function Home() {
   return (
@@ -20,11 +20,11 @@ export default function Home() {
           <Link href="/exercises" className="button">
             Übungen ansehen
           </Link>
-          <Link href="/login" className="button">
-            Login
+          <Link href="/videos" className="button">
+            Videos ansehen
           </Link>
-          <Link href="/register" className="button button-light">
-            Registrieren
+          <Link href="/login" className="button button-light">
+            Login
           </Link>
         </div>
       </section>

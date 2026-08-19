@@ -1,17 +1,12 @@
-"use client";
+﻿import Link from "next/link";
+import { logout } from "@/app/auth/actions";
+import { createClient } from "@/lib/supabase/server";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { logoutLocalUser, useLocalUser } from "@/lib/auth/client";
-
-export function TopBar() {
-  const router = useRouter();
-  const user = useLocalUser();
-
-  function handleLogout() {
-    logoutLocalUser();
-    router.push("/login?message=logged-out");
-  }
+export async function TopBar() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <header className="topbar">
@@ -19,6 +14,26 @@ export function TopBar() {
         <span className="brand-icon">TV</span>
         TV Männedorf
       </Link>
+      <nav className="topbar-nav" aria-label="Hauptnavigation">
+        <Link href="/exercises">Übungen</Link>
+        <Link href="/videos">Videos</Link>
+        {user ? (
+          <>
+            <Link href="/account">Konto</Link>
+            <Link href="/upload">Upload</Link>
+            <form action={logout}>
+              <button type="submit" className="button button-light topbar-logout-button">
+                Abmelden
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <Link href="/login">Anmelden</Link>
+            <Link href="/register">Registrieren</Link>
+          </>
+        )}
+      </nav>
     </header>
   );
 }
