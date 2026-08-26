@@ -58,12 +58,23 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
     notFound();
   }
 
+  const { data: creatorData } = await adminSupabase.auth.admin.getUserById(videoRow.user_id);
+  const creatorUser = creatorData?.user;
+  const creatorFirstName =
+    typeof creatorUser?.user_metadata.first_name === "string" ? creatorUser.user_metadata.first_name : "";
+  const creatorLastName =
+    typeof creatorUser?.user_metadata.last_name === "string" ? creatorUser.user_metadata.last_name : "";
+  const creatorName = [creatorFirstName, creatorLastName].filter(Boolean).join(" ") || creatorUser?.email || "Mitglied";
+
   return (
     <main className="content-page">
       <section className="content-shell video-detail">
         <div className="page-heading">
           <p className="eyebrow">Übungsvideo</p>
           <h1 className="content-title">{videoRow.title}</h1>
+          <Link href={`/profile/${videoRow.user_id}`} className="creator-link">
+            Hochgeladen von {creatorName}
+          </Link>
         </div>
 
         <video className="video-player" src={videoSignedUrl.signedUrl} controls preload="metadata" />

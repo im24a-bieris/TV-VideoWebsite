@@ -628,6 +628,20 @@ select:focus {
   line-height: 1.6;
 }
 
+.creator-link {
+  display: inline-flex;
+  width: max-content;
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.creator-link:hover {
+  border-color: var(--blue);
+}
+
 .upload-form {
   display: grid;
   gap: 1rem;
@@ -636,6 +650,11 @@ select:focus {
   border: 1px solid var(--border);
   border-left: 8px solid var(--yellow);
   border-radius: 16px;
+}
+
+.upload-form h2 {
+  margin: 0;
+  color: var(--black);
 }
 
 .upload-form label {
