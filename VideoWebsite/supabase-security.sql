@@ -16,8 +16,9 @@ alter table public.videos enable row level security;
 alter table public.video_images enable row level security;
 
 drop policy if exists "authenticated users can view videos" on public.videos;
-create policy "authenticated users can view videos"
-  on public.videos for select to authenticated using (true);
+drop policy if exists "anyone can view videos" on public.videos;
+create policy "anyone can view videos"
+  on public.videos for select to anon, authenticated using (true);
 
 drop policy if exists "users can insert their own videos" on public.videos;
 create policy "users can insert their own videos"
@@ -33,8 +34,9 @@ create policy "users can delete their own videos"
   on public.videos for delete to authenticated using ((select auth.uid()) = user_id);
 
 drop policy if exists "authenticated users can view video images" on public.video_images;
-create policy "authenticated users can view video images"
-  on public.video_images for select to authenticated using (true);
+drop policy if exists "anyone can view video images" on public.video_images;
+create policy "anyone can view video images"
+  on public.video_images for select to anon, authenticated using (true);
 
 drop policy if exists "users can insert images for own videos" on public.video_images;
 create policy "users can insert images for own videos"

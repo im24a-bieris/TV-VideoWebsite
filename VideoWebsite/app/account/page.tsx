@@ -1,6 +1,5 @@
 ﻿import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LogoutButton } from "./logout-button";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AccountPage() {
@@ -18,24 +17,17 @@ export default async function AccountPage() {
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email;
 
   return (
-    <main className="account-page">
-      <section className="account-shell">
-        <div className="account-header">
-          <Link href="/" className="brand">
-            <span className="brand-icon">TV</span>
-            TV Männedorf
-          </Link>
-
-          <LogoutButton />
-        </div>
-
-        <div className="account-panel">
+    <main className="content-page">
+      <section className="content-shell">
+        <div className="page-heading">
           <p className="eyebrow">Konto</p>
-          <h1 className="account-title">Willkommen, {displayName}</h1>
-          <p className="account-subtitle">
+          <h1 className="content-title">Willkommen, {displayName}</h1>
+          <p className="content-subtitle">
             Du bist angemeldet und kannst jetzt deine Trainingsdaten und gespeicherten Übungen nutzen.
           </p>
+        </div>
 
+        <div className="upload-form">
           <dl className="account-details">
             <div>
               <dt>E-Mail</dt>
@@ -46,15 +38,15 @@ export default async function AccountPage() {
               <dd>{user.id}</dd>
             </div>
           </dl>
+        </div>
 
-          <div className="account-actions">
-            <Link href="/exercises" className="button button-primary">
-              Übungen ansehen
-            </Link>
-            <Link href="/upload" className="button">
-              Video hochladen
-            </Link>
-          </div>
+        <div className="account-actions">
+          <Link href="/exercises" className="button button-primary">
+            Übungen ansehen
+          </Link>
+          <Link href="/upload" className="button">
+            Video hochladen
+          </Link>
         </div>
       </section>
     </main>
