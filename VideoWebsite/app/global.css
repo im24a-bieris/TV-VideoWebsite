@@ -481,6 +481,21 @@ select:focus {
   filter: brightness(1.15);
 }
 
+.forgot-password-link {
+  justify-self: end;
+  margin-top: -0.35rem;
+  color: var(--blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.forgot-password-link:hover {
+  color: #ffffff;
+  border-color: var(--gold);
+}
+
 .login-footer {
   display: flex;
   flex-wrap: wrap;
