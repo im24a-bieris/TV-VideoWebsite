@@ -28,6 +28,10 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
   const { id } = await params;
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data: video, error } = await supabase
     .from("videos")
     .select("id,title,description,tips,video_path,thumbnail_path,created_at,user_id")
@@ -101,6 +105,11 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
           <Link href="/upload" className="button button-primary">
             Neues Video hochladen
           </Link>
+          {user?.id === videoRow.user_id ? (
+            <Link href={`/videos/${videoRow.id}/edit`} className="button button-secondary">
+              Bearbeiten
+            </Link>
+          ) : null}
         </div>
 
         <Link href="/videos" className="back-link">
