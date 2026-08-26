@@ -604,7 +604,7 @@ select:focus {
 .content-page {
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 3rem);
-  background: var(--white);
+  background: color-mix(in srgb, var(--gold) 50%, var(--page-bg) 50%);
 }
 
 .content-shell {
