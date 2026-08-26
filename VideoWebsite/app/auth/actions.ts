@@ -1,6 +1,7 @@
 ﻿"use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 function getString(formData: FormData, key: string) {
@@ -118,6 +119,34 @@ export async function register(formData: FormData) {
   }
 
   redirect("/account");
+}
+
+export async function requestPasswordReset(formData: FormData) {
+  const email = getString(formData, "email").toLowerCase();
+
+  if (!email) {
+    getErrorRedirect("/forgot-password", "missing-fields");
+  }
+
+  const supabase = await getSupabaseForAction("/forgot-password");
+
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "";
+  const protocol = host.startsWith("localhost") || host.startsWith("127.0.0.1") ? "http" : "https";
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${protocol}://${host}/reset-password`,
+  });
+
+  if (error) {
+    console.error("Supabase password reset request failed", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+  }
+
+  redirect("/forgot-password?message=check-email");
 }
 
 export async function logout() {

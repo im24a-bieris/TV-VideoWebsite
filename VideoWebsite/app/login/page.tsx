@@ -12,6 +12,7 @@ const loginMessages: Record<string, string> = {
 const statusMessages: Record<string, string> = {
   "logged-out": "Du wurdest abgemeldet.",
   "check-email": "Bitte bestätige zuerst deine E-Mail-Adresse und melde dich danach an.",
+  "password-updated": "Dein Passwort wurde geändert. Du kannst dich jetzt anmelden.",
 };
 
 type LoginPageProps = {
@@ -61,6 +62,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               Passwort
               <input name="password" type="password" required placeholder="********" />
             </label>
+
+            <Link href="/forgot-password" className="forgot-password-link">
+              Passwort vergessen?
+            </Link>
 
             <div className="form-actions">
               <button type="submit" className="button button-primary">
