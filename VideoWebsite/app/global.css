@@ -9,7 +9,7 @@
   --text-dark: #111111;
   --muted-text: rgba(17, 17, 17, 0.68);
   --blue: #2F5DA8;
-  --yellow-soft: #fff4a8;
+  --yellow-soft: #ffed79;
   --border: rgba(0, 0, 0, 0.08);
   --radius: 24px;
 }
@@ -604,7 +604,7 @@ select:focus {
 .content-page {
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 3rem);
-  background: color-mix(in srgb, var(--gold) 50%, var(--page-bg) 50%);
+  background: var(--page-bg);
 }
 
 .content-shell {
@@ -767,6 +767,7 @@ select:focus {
   line-height: 1.5;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   overflow: hidden;
 }
 
