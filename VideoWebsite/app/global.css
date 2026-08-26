@@ -10,7 +10,7 @@
   --muted-text: rgba(17, 17, 17, 0.68);
   --blue: #2F5DA8;
   --yellow-soft: #ffed79;
-  --border: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.16);
   --radius: 24px;
 }
 
@@ -152,6 +152,8 @@ a {
 
 .eyebrow {
   display: inline-block;
+  width: max-content;
+  justify-self: start;
   margin: 0 0 1rem;
   padding: 0.35rem 0.75rem;
   color: var(--white);
@@ -576,8 +578,9 @@ select:focus {
   gap: 0.35rem;
   padding: 1rem;
   background: var(--page-bg);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .account-details dt {
@@ -662,9 +665,10 @@ select:focus {
   gap: 1rem;
   padding: clamp(1.25rem, 3vw, 2rem);
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-left: 8px solid var(--yellow);
   border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .upload-form h2 {
@@ -716,9 +720,9 @@ select:focus {
   overflow: hidden;
   min-height: 100%;
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
@@ -776,8 +780,9 @@ select:focus {
   gap: 1rem;
   padding: clamp(1.25rem, 3vw, 2rem);
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .empty-state p {
@@ -806,8 +811,9 @@ select:focus {
 .image-gallery {
   padding: clamp(1.25rem, 3vw, 2rem);
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .info-panel p {
@@ -902,7 +908,7 @@ select:focus {
   justify-content: space-between;
   gap: 1rem;
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-left: 8px solid var(--yellow);
 }
 
