@@ -482,7 +482,7 @@ select:focus {
 }
 
 .forgot-password-link {
-  justify-self: end;
+
   margin-top: -0.35rem;
   color: var(--blue);
   font-size: 0.9rem;
@@ -604,7 +604,7 @@ select:focus {
 .content-page {
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 3rem);
-  background: var(--page-bg);
+  background: var(--white);
 }
 
 .content-shell {
