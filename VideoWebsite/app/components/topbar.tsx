@@ -8,11 +8,15 @@ export async function TopBar() {
   let user: User | null = null;
 
   if (getSupabaseConfig()) {
-    const supabase = await createClient();
-    const {
-      data: { user: currentUser },
-    } = await supabase.auth.getUser();
-    user = currentUser;
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser();
+      user = currentUser;
+    } catch {
+      user = null;
+    }
   }
 
   return (
