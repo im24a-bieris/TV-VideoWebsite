@@ -60,6 +60,16 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
   const videoUrl = videoSignedUrl?.signedUrl ?? null;
   const videoUnavailable = Boolean(videoUrlError) || !videoUrl;
 
+  const galleryImages = await Promise.all(
+    ((images ?? []) as VideoImageRow[]).map(async (image) => {
+      const { data: imageSignedUrl } = await adminSupabase.storage
+        .from("images")
+        .createSignedUrl(image.image_path, 3600);
+
+      return imageSignedUrl?.signedUrl ? { id: image.id, url: imageSignedUrl.signedUrl } : null;
+    })
+  ).then((results) => results.filter((result): result is { id: string; url: string } => result !== null));
+
   const { data: creatorData } = await adminSupabase.auth.admin.getUserById(videoRow.user_id);
   const creatorUser = creatorData?.user;
   const creatorFirstName =
@@ -99,25 +109,19 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
           </article>
         </div>
 
-        {images && images.length > 0 ? (
+        {galleryImages.length > 0 ? (
           <section className="image-gallery" aria-label="Fotos zur Beschreibung">
             <h2>Fotos zur Beschreibung</h2>
             <div className="image-gallery-grid">
-              {(images as VideoImageRow[]).map(async (image) => {
-                const { data: imageSignedUrl } = await adminSupabase.storage
-                  .from("images")
-                  .createSignedUrl(image.image_path, 3600);
-
-                return imageSignedUrl?.signedUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={image.id}
-                    src={imageSignedUrl.signedUrl}
-                    alt={`Foto zum Video ${videoRow.title}`}
-                    className="gallery-image"
-                  />
-                ) : null;
-              })}
+              {galleryImages.map((image) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={image.id}
+                  src={image.url}
+                  alt={`Foto zum Video ${videoRow.title}`}
+                  className="gallery-image"
+                />
+              ))}
             </div>
           </section>
         ) : null}
