@@ -16,11 +16,11 @@ const statusMessages: Record<string, string> = {
 };
 
 type LoginPageProps = {
-  searchParams: Promise<{ error?: string; message?: string }>;
+  searchParams: Promise<{ error?: string; message?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error, message } = await searchParams;
+  const { error, message, next } = await searchParams;
   const errorMessage = error ? loginMessages[error] : undefined;
   const statusMessage = message ? statusMessages[message] : undefined;
 
@@ -39,10 +39,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           <p className="subtitle">
-            Melde dich mit deiner E-Mail und deinem Passwort an, um deine Übungen zu entdecken.
+            Melde dich mit deiner E-Mail und deinem Passwort an, um die Videos zu entdecken.
           </p>
 
           <form action={login} className="login-form">
+            {next ? <input type="hidden" name="next" value={next} /> : null}
+
             {errorMessage ? (
               <p className="form-message form-message-error" role="alert">
                 {errorMessage}
@@ -80,7 +82,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               Registrieren
             </Link>
             <span>oder</span>
-            <Link href="/exercises" className="auth-link">
+            <Link href="/videos" className="auth-link">
               als Gast starten
             </Link>
           </div>

@@ -12,6 +12,10 @@ function getErrorRedirect(path: string, error: string) {
   redirect(`${path}?error=${error}`);
 }
 
+function getSafeNext(next: string) {
+  return next.startsWith("/") && !next.startsWith("//") ? next : null;
+}
+
 async function getSupabaseForAction(path: string) {
   try {
     return await createClient();
@@ -28,9 +32,11 @@ export async function login(formData: FormData) {
 
   const email = getString(formData, "email").toLowerCase();
   const password = getString(formData, "password");
+  const next = getSafeNext(getString(formData, "next"));
+  const nextSuffix = next ? `&next=${encodeURIComponent(next)}` : "";
 
   if (!email || !password) {
-    getErrorRedirect("/login", "missing-fields");
+    getErrorRedirect("/login", `missing-fields${nextSuffix}`);
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -46,13 +52,13 @@ export async function login(formData: FormData) {
     });
 
     if (error.message.toLowerCase().includes("not confirmed")) {
-      getErrorRedirect("/login", "email-not-confirmed");
+      getErrorRedirect("/login", `email-not-confirmed${nextSuffix}`);
     }
 
-    getErrorRedirect("/login", "credentials");
+    getErrorRedirect("/login", `credentials${nextSuffix}`);
   }
 
-  redirect("/account");
+  redirect(next ?? "/account");
 }
 
 export async function register(formData: FormData) {

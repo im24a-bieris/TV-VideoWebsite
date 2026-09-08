@@ -2,6 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { VideoPlayer } from "./video-player";
+
+export const dynamic = "force-dynamic";
 
 type VideoRow = {
   id: string;
@@ -54,9 +57,8 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
     .from("videos")
     .createSignedUrl(videoRow.video_path, 3600);
 
-  if (videoUrlError || !videoSignedUrl?.signedUrl) {
-    notFound();
-  }
+  const videoUrl = videoSignedUrl?.signedUrl ?? null;
+  const videoUnavailable = Boolean(videoUrlError) || !videoUrl;
 
   const { data: creatorData } = await adminSupabase.auth.admin.getUserById(videoRow.user_id);
   const creatorUser = creatorData?.user;
@@ -70,14 +72,20 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
     <main className="content-page">
       <section className="content-shell video-detail">
         <div className="page-heading">
-          <p className="eyebrow">Übungsvideo</p>
+          <p className="eyebrow">Video</p>
           <h1 className="content-title">{videoRow.title}</h1>
           <Link href={`/profile/${videoRow.user_id}`} className="creator-link">
             Hochgeladen von {creatorName}
           </Link>
         </div>
 
-        <video className="video-player" src={videoSignedUrl.signedUrl} controls preload="metadata" />
+        {videoUnavailable ? (
+          <p className="form-message form-message-error" role="alert">
+            Das Video konnte nicht geladen werden. Bitte lade die Seite neu.
+          </p>
+        ) : (
+          <VideoPlayer src={videoUrl} />
+        )}
 
         <div className="video-detail-grid">
           <article className="info-panel">
@@ -102,7 +110,12 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
 
                 return imageSignedUrl?.signedUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img key={image.id} src={imageSignedUrl.signedUrl} alt="" className="gallery-image" />
+                  <img
+                    key={image.id}
+                    src={imageSignedUrl.signedUrl}
+                    alt={`Foto zum Video ${videoRow.title}`}
+                    className="gallery-image"
+                  />
                 ) : null;
               })}
             </div>

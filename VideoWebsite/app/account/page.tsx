@@ -44,7 +44,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
           <p className="eyebrow">Konto</p>
           <h1 className="content-title">Willkommen, {displayName}</h1>
           <p className="content-subtitle">
-            Du bist angemeldet und kannst jetzt deine Trainingsdaten und gespeicherten Übungen nutzen.
+            Du bist angemeldet und kannst jetzt deine Trainingsdaten und gespeicherten Videos nutzen.
           </p>
         </div>
 
@@ -106,8 +106,8 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
         </form>
 
         <div className="account-actions">
-          <Link href="/exercises" className="button button-primary">
-            Übungen ansehen
+          <Link href="/videos" className="button button-primary">
+            Videos ansehen
           </Link>
           <Link href="/upload" className="button">
             Video hochladen

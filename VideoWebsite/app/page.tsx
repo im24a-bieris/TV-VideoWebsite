@@ -17,9 +17,6 @@ export default function Home() {
         </div>
 
         <div className="button-group">
-          <Link href="/exercises" className="button">
-            Übungen ansehen
-          </Link>
           <Link href="/videos" className="button">
             Videos ansehen
           </Link>
