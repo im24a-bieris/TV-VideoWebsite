@@ -1,5 +1,6 @@
 ﻿import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getInstagramUrl } from "@/lib/instagram";
 import { createClient } from "@/lib/supabase/server";
 import { updateProfile } from "./actions";
 
@@ -31,6 +32,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email;
   const phone = typeof user.user_metadata.phone === "string" ? user.user_metadata.phone : "";
   const instagram = typeof user.user_metadata.instagram === "string" ? user.user_metadata.instagram : "";
+  const instagramUrl = getInstagramUrl(instagram);
 
   const errorMessage = error ? profileMessages[error] : undefined;
   const statusMessage = message ? profileStatusMessages[message] : undefined;
@@ -58,7 +60,15 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
             </div>
             <div>
               <dt>Instagram</dt>
-              <dd>{instagram || "Nicht angegeben"}</dd>
+              <dd>
+                {instagramUrl ? (
+                  <a href={instagramUrl} target="_blank" rel="noreferrer">
+                    {instagram}
+                  </a>
+                ) : (
+                  "Nicht angegeben"
+                )}
+              </dd>
             </div>
           </dl>
         </div>
