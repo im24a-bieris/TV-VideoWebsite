@@ -738,8 +738,8 @@ select:focus {
 }
 
 .video-card-image {
-  background: var(--page-bg);
-  object-fit: contain;
+  background: var(--black);
+  object-fit: cover;
 }
 
 .video-card-placeholder {
@@ -747,7 +747,11 @@ select:focus {
   place-items: center;
   color: var(--yellow);
   background: var(--black);
-  font-weight: 900;
+}
+
+.video-card-placeholder svg {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .video-card-body {
@@ -801,6 +805,17 @@ select:focus {
   border-radius: 16px;
 }
 
+.video-player-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--white);
+  text-align: center;
+  padding: 1.5rem;
+}
+
 .video-detail-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -837,8 +852,8 @@ select:focus {
 .gallery-image {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: var(--page-bg);
-  object-fit: contain;
+  background: var(--black);
+  object-fit: cover;
   border-radius: 12px;
 }
 

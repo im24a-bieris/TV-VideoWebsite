@@ -36,7 +36,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           </div>
 
           <p className="subtitle">
-            Erstelle dein Konto und starte direkt mit den Übungen.
+            Erstelle dein Konto und starte direkt mit den Videos.
           </p>
 
           <form action={register} className="login-form">
@@ -86,7 +86,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
               Anmelden
             </Link>
             <span>oder</span>
-            <Link href="/exercises" className="auth-link">
+            <Link href="/videos" className="auth-link">
               als Gast starten
             </Link>
           </div>

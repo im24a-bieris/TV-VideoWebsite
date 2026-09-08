@@ -164,7 +164,7 @@ export function UploadForm() {
 
       <label>
         Beschreibung
-        <textarea name="description" required rows={6} placeholder="Beschreibe die Übung und worauf man achten soll." />
+        <textarea name="description" required rows={6} placeholder="Beschreibe das Video und worauf man achten soll." />
       </label>
 
       <label>

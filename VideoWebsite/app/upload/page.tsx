@@ -10,7 +10,7 @@ export default async function UploadPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/login?next=/upload");
   }
 
   return (
@@ -20,7 +20,7 @@ export default async function UploadPage() {
           <p className="eyebrow">Upload</p>
           <h1 className="content-title">Video hochladen</h1>
           <p className="content-subtitle">
-            Lade dein Übungsvideo hoch und ergänze Beschreibung, Tipps und Fotos.
+            Lade dein Video hoch und ergänze Beschreibung, Tipps und Fotos.
           </p>
         </div>
 

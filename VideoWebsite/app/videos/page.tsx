@@ -2,6 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+export const dynamic = "force-dynamic";
+
 type VideoRow = {
   id: string;
   title: string;
@@ -25,7 +27,7 @@ export default async function VideosPage() {
         <div className="page-heading page-heading-row">
           <div>
             <p className="eyebrow">Videos</p>
-            <h1 className="content-title">Übungsvideos</h1>
+            <h1 className="content-title">Videos</h1>
             <p className="content-subtitle">Videos, Beschreibungen und Tipps aus dem Training.</p>
           </div>
 
@@ -43,7 +45,7 @@ export default async function VideosPage() {
         {!error && (!videos || videos.length === 0) ? (
           <div className="empty-state">
             <h2>Noch keine Videos</h2>
-            <p>Lade das erste Übungsvideo hoch.</p>
+            <p>Lade das erste Video hoch.</p>
             <Link href="/upload" className="button button-primary">
               Erstes Video hochladen
             </Link>
@@ -62,9 +64,13 @@ export default async function VideosPage() {
                 <Link key={video.id} href={`/videos/${video.id}`} className="video-card">
                   {thumbnailUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumbnailUrl} alt="" className="video-card-image" />
+                    <img src={thumbnailUrl} alt={video.title} className="video-card-image" />
                   ) : (
-                    <div className="video-card-placeholder">Video</div>
+                    <div className="video-card-placeholder" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
                   )}
 
                   <div className="video-card-body">

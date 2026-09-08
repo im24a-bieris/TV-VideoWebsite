@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getInstagramUrl } from "@/lib/instagram";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -17,7 +17,29 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   } = await supabase.auth.getUser();
 
   if (!viewer) {
-    redirect("/login");
+    return (
+      <main className="content-page">
+        <section className="content-shell">
+          <div className="page-heading">
+            <p className="eyebrow">Profil</p>
+            <h1 className="content-title">Anmeldung erforderlich</h1>
+            <p className="content-subtitle">
+              Profile sind nur für angemeldete Mitglieder sichtbar, da sie Kontaktdaten wie Telefonnummer und
+              Instagram enthalten können.
+            </p>
+          </div>
+
+          <div className="account-actions">
+            <Link href={`/login?next=${encodeURIComponent(`/profile/${id}`)}`} className="button button-primary">
+              Anmelden
+            </Link>
+            <Link href="/videos" className="button">
+              Zurück zu den Videos
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   const { data, error } = await createAdminClient().auth.admin.getUserById(id);

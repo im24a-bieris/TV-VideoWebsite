@@ -26,7 +26,6 @@ export async function TopBar() {
         TV Männedorf
       </Link>
       <nav className="topbar-nav" aria-label="Hauptnavigation">
-        <Link href="/exercises">Übungen</Link>
         <Link href="/videos">Videos</Link>
         {user ? (
           <>
