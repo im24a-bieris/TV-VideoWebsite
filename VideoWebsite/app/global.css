@@ -762,8 +762,7 @@ select:focus {
 
 .video-card-body h2,
 .empty-state h2,
-.info-panel h2,
-.image-gallery h2 {
+.info-panel h2 {
   margin: 0;
   color: var(--black);
 }
@@ -822,8 +821,7 @@ select:focus {
   gap: 1rem;
 }
 
-.info-panel,
-.image-gallery {
+.info-panel {
   padding: clamp(1.25rem, 3vw, 2rem);
   background: var(--white);
   border: 2px solid var(--border);
@@ -836,25 +834,6 @@ select:focus {
   margin: 1rem 0 0;
   color: var(--muted-text);
   line-height: 1.7;
-}
-
-.image-gallery {
-  display: grid;
-  gap: 1rem;
-}
-
-.image-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-}
-
-.gallery-image {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: var(--black);
-  object-fit: cover;
-  border-radius: 12px;
 }
 
 @media (max-width: 760px) {

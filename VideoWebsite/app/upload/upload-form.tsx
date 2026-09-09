@@ -38,9 +38,7 @@ export function UploadForm() {
       const description = String(formData.get("description") ?? "").trim();
       const tips = String(formData.get("tips") ?? "").trim();
       const video = formData.get("video");
-      const images = formData
-        .getAll("images")
-        .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+      const thumbnail = formData.get("thumbnail");
 
       if (!title || !description || !tips) {
         throw new Error("Bitte fülle Titel, Beschreibung und Tipps aus.");
@@ -58,13 +56,15 @@ export function UploadForm() {
         throw new Error("Das Video darf maximal 50 MB gross sein.");
       }
 
-      for (const image of images) {
-        if (!ALLOWED_IMAGE_TYPES.includes(image.type)) {
-          throw new Error("Fotos müssen JPG, PNG oder WebP sein.");
+      const hasThumbnail = thumbnail instanceof File && thumbnail.size > 0;
+
+      if (hasThumbnail) {
+        if (!ALLOWED_IMAGE_TYPES.includes(thumbnail.type)) {
+          throw new Error("Das Thumbnail muss JPG, PNG oder WebP sein.");
         }
 
-        if (image.size > MAX_IMAGE_SIZE) {
-          throw new Error("Ein Foto darf maximal 10 MB gross sein.");
+        if (thumbnail.size > MAX_IMAGE_SIZE) {
+          throw new Error("Das Thumbnail darf maximal 10 MB gross sein.");
         }
       }
 
@@ -81,7 +81,7 @@ export function UploadForm() {
       const videoId = crypto.randomUUID();
       const videoPath = `${user.id}/${videoId}/video.${getFileExtension(video)}`;
       const uploadedVideoPaths = [videoPath];
-      const uploadedImagePaths: string[] = [];
+      let uploadedThumbnailPath: string | null = null;
       let videoRowCreated = false;
 
       try {
@@ -93,16 +93,18 @@ export function UploadForm() {
 
         if (videoUploadError) throw videoUploadError;
 
-        for (const [index, image] of images.entries()) {
-          const imagePath = `${user.id}/${videoId}/${index + 1}-${crypto.randomUUID()}.${getFileExtension(image)}`;
-          const { error: imageUploadError } = await supabase.storage.from("images").upload(imagePath, image, {
-            cacheControl: "3600",
-            contentType: image.type,
-            upsert: false,
-          });
+        if (hasThumbnail) {
+          const thumbnailPath = `${user.id}/${videoId}/thumbnail.${getFileExtension(thumbnail)}`;
+          const { error: thumbnailUploadError } = await supabase.storage
+            .from("images")
+            .upload(thumbnailPath, thumbnail, {
+              cacheControl: "3600",
+              contentType: thumbnail.type,
+              upsert: false,
+            });
 
-          if (imageUploadError) throw imageUploadError;
-          uploadedImagePaths.push(imagePath);
+          if (thumbnailUploadError) throw thumbnailUploadError;
+          uploadedThumbnailPath = thumbnailPath;
         }
 
         const { error: videoInsertError } = await supabase.from("videos").insert({
@@ -112,23 +114,11 @@ export function UploadForm() {
           description,
           tips,
           video_path: videoPath,
-          thumbnail_path: uploadedImagePaths[0] ?? null,
+          thumbnail_path: uploadedThumbnailPath,
         });
 
         if (videoInsertError) throw videoInsertError;
         videoRowCreated = true;
-
-        if (uploadedImagePaths.length > 0) {
-          const { error: imagesInsertError } = await supabase.from("video_images").insert(
-            uploadedImagePaths.map((imagePath, index) => ({
-              video_id: videoId,
-              image_path: imagePath,
-              sort_order: index,
-            }))
-          );
-
-          if (imagesInsertError) throw imagesInsertError;
-        }
       } catch (uploadError) {
         if (videoRowCreated) {
           await supabase.from("videos").delete().eq("id", videoId);
@@ -136,7 +126,7 @@ export function UploadForm() {
 
         await Promise.all([
           supabase.storage.from("videos").remove(uploadedVideoPaths),
-          uploadedImagePaths.length > 0 ? supabase.storage.from("images").remove(uploadedImagePaths) : Promise.resolve(),
+          uploadedThumbnailPath ? supabase.storage.from("images").remove([uploadedThumbnailPath]) : Promise.resolve(),
         ]);
         throw uploadError;
       }
@@ -179,9 +169,9 @@ export function UploadForm() {
       </label>
 
       <label>
-        Fotos zur Beschreibung
-        <input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple />
-        <small>JPG, PNG oder WebP, jeweils maximal 10 MB.</small>
+        Thumbnail
+        <input name="thumbnail" type="file" accept="image/jpeg,image/png,image/webp" />
+        <small>JPG, PNG oder WebP, maximal 10 MB. Wird als Vorschaubild verwendet.</small>
       </label>
 
       <button type="submit" className="button button-primary upload-submit" disabled={isSubmitting}>

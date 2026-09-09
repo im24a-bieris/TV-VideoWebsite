@@ -23,7 +23,7 @@ export async function TopBar() {
     <header className="topbar">
       <Link href="/" className="brand">
         <span className="brand-icon">TV</span>
-        TV Männedorf
+        Männedorf
       </Link>
       <nav className="topbar-nav" aria-label="Hauptnavigation">
         <Link href="/videos">Videos</Link>

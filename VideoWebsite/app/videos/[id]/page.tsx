@@ -17,12 +17,6 @@ type VideoRow = {
   user_id: string;
 };
 
-type VideoImageRow = {
-  id: string;
-  image_path: string;
-  sort_order: number | null;
-};
-
 type VideoDetailPageProps = {
   params: Promise<{ id: string }>;
 };
@@ -45,12 +39,6 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
     notFound();
   }
 
-  const { data: images } = await supabase
-    .from("video_images")
-    .select("id,image_path,sort_order")
-    .eq("video_id", id)
-    .order("sort_order", { ascending: true });
-
   const videoRow = video as VideoRow;
   const adminSupabase = createAdminClient();
   const { data: videoSignedUrl, error: videoUrlError } = await adminSupabase.storage
@@ -59,16 +47,6 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
 
   const videoUrl = videoSignedUrl?.signedUrl ?? null;
   const videoUnavailable = Boolean(videoUrlError) || !videoUrl;
-
-  const galleryImages = await Promise.all(
-    ((images ?? []) as VideoImageRow[]).map(async (image) => {
-      const { data: imageSignedUrl } = await adminSupabase.storage
-        .from("images")
-        .createSignedUrl(image.image_path, 3600);
-
-      return imageSignedUrl?.signedUrl ? { id: image.id, url: imageSignedUrl.signedUrl } : null;
-    })
-  ).then((results) => results.filter((result): result is { id: string; url: string } => result !== null));
 
   const { data: creatorData } = await adminSupabase.auth.admin.getUserById(videoRow.user_id);
   const creatorUser = creatorData?.user;
@@ -108,23 +86,6 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
             <p>{videoRow.tips}</p>
           </article>
         </div>
-
-        {galleryImages.length > 0 ? (
-          <section className="image-gallery" aria-label="Fotos zur Beschreibung">
-            <h2>Fotos zur Beschreibung</h2>
-            <div className="image-gallery-grid">
-              {galleryImages.map((image) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={image.id}
-                  src={image.url}
-                  alt={`Foto zum Video ${videoRow.title}`}
-                  className="gallery-image"
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
 
         <div className="account-actions">
           <Link href="/videos" className="button">
