@@ -30,7 +30,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div className="login-card">
           <div className="login-brand">
             <Link href="/" className="brand-icon-login">
-              TV Männedorf
+              Männedorf
             </Link>
           </div>
 

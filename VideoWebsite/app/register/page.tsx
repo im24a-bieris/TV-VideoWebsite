@@ -27,7 +27,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
         <div className="login-card register-card">
           <div className="login-brand">
             <Link href="/" className="brand-icon-login">
-              TV Männedorf
+              Männedorf
             </Link>
           </div>
 

@@ -26,7 +26,7 @@ export default async function ForgotPasswordPage({ searchParams }: ForgotPasswor
         <div className="login-card">
           <div className="login-brand">
             <Link href="/" className="brand-icon-login">
-              TV Männedorf
+              Männedorf
             </Link>
           </div>
 
