@@ -21,6 +21,13 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
   }
 
   return (
-    <video className="video-player" src={src} controls preload="metadata" onError={() => setFailed(true)} />
+    <video
+      className="video-player"
+      src={src}
+      controls
+      muted
+      preload="metadata"
+      onError={() => setFailed(true)}
+    />
   );
 }

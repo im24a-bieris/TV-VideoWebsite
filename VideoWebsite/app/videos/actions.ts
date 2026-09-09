@@ -65,7 +65,7 @@ export async function deleteVideo(formData: FormData) {
 
   const { data: video } = await supabase
     .from("videos")
-    .select("video_path,user_id")
+    .select("video_path,thumbnail_path,user_id")
     .eq("id", id)
     .single();
 
@@ -73,9 +73,13 @@ export async function deleteVideo(formData: FormData) {
     redirect("/videos");
   }
 
-  const { data: images } = await supabase.from("video_images").select("image_path").eq("video_id", id);
+  // Legacy videos may still have gallery rows from before thumbnails became the only image.
+  const { data: legacyImages } = await supabase.from("video_images").select("image_path").eq("video_id", id);
 
-  const imagePaths = (images ?? []).map((image) => image.image_path);
+  const imagePaths = [
+    ...(video.thumbnail_path ? [video.thumbnail_path] : []),
+    ...(legacyImages ?? []).map((image) => image.image_path),
+  ];
 
   await supabase.from("video_images").delete().eq("video_id", id);
 
