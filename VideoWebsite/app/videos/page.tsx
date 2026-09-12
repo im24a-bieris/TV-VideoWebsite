@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { VideoThumbnail } from "./video-thumbnail";
 
 export const dynamic = "force-dynamic";
 
@@ -63,8 +64,7 @@ export default async function VideosPage() {
               return (
                 <Link key={video.id} href={`/videos/${video.id}`} className="video-card">
                   {thumbnailUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumbnailUrl} alt={video.title} className="video-card-image" />
+                    <VideoThumbnail src={thumbnailUrl} alt={video.title} />
                   ) : (
                     <div className="video-card-placeholder" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="currentColor">
