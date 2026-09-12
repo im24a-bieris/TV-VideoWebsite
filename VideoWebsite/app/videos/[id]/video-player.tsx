@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type VideoPlayerProps = {
   src: string;
@@ -8,6 +8,7 @@ type VideoPlayerProps = {
 
 export function VideoPlayer({ src }: VideoPlayerProps) {
   const [failed, setFailed] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   if (failed) {
     return (
@@ -20,14 +21,26 @@ export function VideoPlayer({ src }: VideoPlayerProps) {
     );
   }
 
+  function enforceMuted() {
+    const video = videoRef.current;
+    if (video && (!video.muted || video.volume !== 0)) {
+      video.muted = true;
+      video.volume = 0;
+    }
+  }
+
   return (
     <video
+      ref={videoRef}
       className="video-player"
       src={src}
       controls
       muted
       preload="metadata"
       onError={() => setFailed(true)}
+      onVolumeChange={enforceMuted}
+      onLoadedMetadata={enforceMuted}
+      onPlay={enforceMuted}
     />
   );
 }
