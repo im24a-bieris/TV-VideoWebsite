@@ -739,7 +739,8 @@ select:focus {
 
 .video-card-image {
   background: var(--black);
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .video-card-placeholder {
