@@ -1,3 +1,5 @@
+# TV-Video-Website
+
 ## Wie das Ganze aufgebaut ist
 
 Alles Sichtbare steckt im `app`-Ordner, weil Next.js daraus automatisch die Seiten baut. `app/layout.tsx` ist der Rahmen um jede Seite: dort wird das globale CSS (`app/global.css`) geladen und die TopBar (`app/components/topbar.tsx`) sowie der Footer eingebaut. Die Startseite selbst ist einfach `app/page.tsx` mit dem Hero-Bereich.
