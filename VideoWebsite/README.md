@@ -27,6 +27,13 @@ Geplante Verbesserungen und Features, priorisiert nach Nutzen für den Verein.
 ### Zugriff & Rollen
 - [ ] Login-System mit Rollen (Trainer / Admin / Mitglied) – regelt, wer Videos nur ansehen und wer zusätzlich hochladen darf
 
+### Seiten Layout besser gestalten
+Die Seite angenehm Gestallten, damit die Users möglichst lange drauf bliebt
+- [] Nav und buttons neu andordenen -> Buttons die es auf der Seite nicht braucht in die NAV-bar einorden. 
+- [] Wenn man runterscrollt beim Video anschauen, seht man ein mini version des Videos
+- [] nächtes Video Vorschlag 
+
+
 ### Sicherheit
 - [ ] Sicherheitshinweis bei anspruchsvollen Übungen (z. B. Backflip): Hinweis auf nötige Aufsicht und passenden Trainingsstand
 
